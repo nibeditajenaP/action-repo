@@ -1,0 +1,21 @@
+name: Push Event Trigger
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  trigger-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Push Event to Webhook
+        run: |
+          curl -X POST https://<your-webhook-url>/webhook \
+          -H "Content-Type: application/json" \
+          -d '{
+              "action": "push",
+              "author": "${{ github.actor }}",
+              "to_branch": "${{ github.ref_name }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}"
+          }'
